@@ -3,6 +3,8 @@ const Pay = require("../../../models/pay");
 const Product = require("../../../models/product");
 
 const authService = require("../../../services/auth");
+const fs = require("fs");
+const path = require("path");
 
 const loginUser = async (req, res) => {
   try {
@@ -12,7 +14,7 @@ const loginUser = async (req, res) => {
     if (type === 0) {
       user_type = "admin";
     }
-    console.log(googleToken)
+    console.log(googleToken);
     if (!googleToken) {
       throw new Error("Invalid payload for login");
     }
@@ -41,7 +43,10 @@ const loginUser = async (req, res) => {
       }
     }
 
-    const accessToken = generateToken(
+    const privateKey = fs.readFileSync(
+      path.join(__dirname, "..", "..", "..", "secrets", "private.pem")
+    );
+    const accessToken = authService.generateToken(
       {
         _id: user._id,
         email: user.email,
@@ -60,7 +65,7 @@ const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.internalServerError({
+    return res.status(500).json({
       message: "Oops! some error occured from Backend",
     });
   }
@@ -82,7 +87,7 @@ const sales = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.internalServerError({
+    return res.status(500).json({
       message: "Oops! some error occured from Backend",
     });
   }
@@ -142,7 +147,7 @@ const afflliateCode = async (req, user, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.internalServerError({
+    return res.status(500).json({
       message: "Oops! some error occured from Backend",
     });
   }
@@ -164,7 +169,7 @@ const userProducts = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.internalServerError({
+    return res.status(500).json({
       message: "Oops! some error occured from Backend",
     });
   }
@@ -186,7 +191,7 @@ const userProduct = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.internalServerError({
+    return res.status(500).json({
       message: "Oops! some error occured from Backend",
     });
   }

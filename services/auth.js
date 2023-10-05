@@ -21,6 +21,7 @@ const generateToken = (user, secret) => {
 
 const verifyGoogleOneTap = async (token) => {
   const payload = await FireBaseAdmin.admin.auth().verifyIdToken(token);
+  console.log(payload);
   const { name, email, picture } = payload;
   return {
     name,

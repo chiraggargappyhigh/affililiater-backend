@@ -24,7 +24,7 @@ mongoosePaginate.paginate.options = { customLabels: myCustomLabels };
 const Schema = mongoose.Schema;
 const schema = new Schema(
   {
-    profile_pic: { type: Boolean },
+    profile_pic: { type: String },
     email: { type: String },
     name: { type: String },
     firebase_uid: { type: String },
