@@ -29,9 +29,9 @@ const schema = new Schema(
     name: { type: String },
     firebase_uid: { type: String },
     user_type: { type: String },
-    total_earning: { type: Number },
-    total_referrals: { type: Number },
-    total_sales: { type: Number },
+    total_earning: { type: Number, default: 0 },
+    total_referrals: { type: Number, default: 0 },
+    total_sales: { type: Number, default: 0 },
   },
   {
     timestamps: true,
