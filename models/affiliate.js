@@ -24,24 +24,27 @@ mongoosePaginate.paginate.options = { customLabels: myCustomLabels };
 const Schema = mongoose.Schema;
 const schema = new Schema(
   {
-    app: { type: mongoose.Schema.Types.ObjectId, ref: "App", required: true },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    saleAmount: { type: Number, required: true },
-    saleDate: { type: Date, default: Date.now },
-    earningAmount: { type: Number, required: true },
-    earningDate: { type: Date, default: Date.now },
-    affiliate: {
+    promotion_link: { type: String },
+    promotion_code: { type: String },
+    app: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Affiliate",
+      ref: "product",
       required: true,
     },
-    commission: {
-      inCurrency: Number,
-      inUSD: Number,
+    earnings: Number,
+    referrals: Number,
+    sales: Number,
+    config: {
+      coupon_discount: Number,
+      commission: {
+        type: Map,
+        of: Number,
+      },
     },
   },
   {
@@ -69,6 +72,11 @@ schema.pre("insertMany", async function (next, docs) {
   next();
 });
 
+schema.methods.isPasswordMatch = async function (password) {
+  const user = this;
+  return bcrypt.compare(password, user.password);
+};
+
 schema.method("toJSON", function () {
   const { _id, __v, ...object } = this.toObject({ virtuals: true });
   object.id = _id;
@@ -78,5 +86,5 @@ schema.method("toJSON", function () {
 });
 schema.plugin(mongoosePaginate);
 schema.plugin(idValidator);
-const pay = mongoose.model("pay", schema);
-module.exports = pay;
+const user = mongoose.model("user", schema);
+module.exports = user;

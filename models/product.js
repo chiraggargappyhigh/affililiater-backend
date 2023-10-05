@@ -24,24 +24,32 @@ mongoosePaginate.paginate.options = { customLabels: myCustomLabels };
 const Schema = mongoose.Schema;
 const schema = new Schema(
   {
-    app: { type: mongoose.Schema.Types.ObjectId, ref: "App", required: true },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    saleAmount: { type: Number, required: true },
-    saleDate: { type: Date, default: Date.now },
-    earningAmount: { type: Number, required: true },
-    earningDate: { type: Date, default: Date.now },
-    affiliate: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Affiliate",
-      required: true,
+    total_earning: { type: Number },
+    name: { type: String },
+    description: { type: String },
+    logo: { type: String },
+    admins: { type: [String] },
+    homepage: String,
+    privacy_policy: String,
+    terms_and_conditions: String,
+    contact_email: String,
+    default_config: {
+      coupon_discount: Number,
+      commission: {
+        type: Map,
+        of: Number,
+      },
     },
-    commission: {
-      inCurrency: Number,
-      inUSD: Number,
+    stripe: {
+      test_key: String,
+      live_key: String,
+      test_webhook_secret: String,
+      live_webhook_secret: String,
     },
   },
   {
@@ -69,6 +77,11 @@ schema.pre("insertMany", async function (next, docs) {
   next();
 });
 
+schema.methods.isPasswordMatch = async function (password) {
+  const user = this;
+  return bcrypt.compare(password, user.password);
+};
+
 schema.method("toJSON", function () {
   const { _id, __v, ...object } = this.toObject({ virtuals: true });
   object.id = _id;
@@ -78,5 +91,5 @@ schema.method("toJSON", function () {
 });
 schema.plugin(mongoosePaginate);
 schema.plugin(idValidator);
-const pay = mongoose.model("pay", schema);
-module.exports = pay;
+const product = mongoose.model("product", schema);
+module.exports = product;

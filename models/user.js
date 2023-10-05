@@ -24,10 +24,14 @@ mongoosePaginate.paginate.options = { customLabels: myCustomLabels };
 const Schema = mongoose.Schema;
 const schema = new Schema(
   {
-    is_third_party: { type: Boolean },
+    profile_pic: { type: Boolean },
     email: { type: String },
     name: { type: String },
-    apps: {type: [String]}
+    firebase_uid: { type: String },
+    user_type: { type: String },
+    total_earning: { type: Number },
+    total_referrals: { type: Number },
+    total_sales: { type: Number },
   },
   {
     timestamps: true,
