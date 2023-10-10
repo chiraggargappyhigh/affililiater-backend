@@ -24,12 +24,6 @@ mongoosePaginate.paginate.options = { customLabels: myCustomLabels };
 const Schema = mongoose.Schema;
 const schema = new Schema(
   {
-    user_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    total_earning: { type: Number },
     name: { type: String },
     description: { type: String },
     logo: { type: String },
@@ -40,7 +34,7 @@ const schema = new Schema(
     contact_email: String,
     default_config: {
       coupon_discount: Number,
-      commission: {
+      comission: {
         type: Map,
         of: Number,
       },

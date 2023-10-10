@@ -17,12 +17,29 @@ const apiLimiter = rateLimit({
 
 router.route("/app/api/v1/user/user-login").post(userController.loginUser);
 // router.route("/app/api/v1/affiliate").post(userController.afflliate);
-router.route("/app/api/v1/affiliate-code").post(userController.afflliateCode);
+router
+  .route("/app/api/v1/affiliate-code")
+  .post(authenticateJWT, userController.afflliateCode);
 
-router.route("/app/api/v1/sales").post(userController.sales);
-router.route("/app/api/v1/products").post(authenticateJWT, userController.userProducts);
-router.route("/app/api/v1/product").post(authenticateJWT, userController.userProduct);
+router.route("/app/api/v1/sales-by-app").get(userController.salesByApp);
+router.route("/app/api/v1/sales-by-user").get(authenticateJWT, userController.salesByUser);
 
+
+router.route("/app/api/v1/products").get(userController.Products);
+router.get(
+  "/app/api/v1/user/products",
+  authenticateJWT,
+  userController.userProducts
+);
+router
+  .route("/app/api/v1/product")
+  .get(authenticateJWT, userController.userProduct);
+
+router.route("/app/api/v1/transaction").put(userController.transactionWebhook);
+
+router
+  .route("/app/api/v1/user")
+  .get(authenticateJWT, userController.user);
 
 // router
 //   .route("/app/api/v1/user/update-profile")

@@ -28,7 +28,7 @@ const schema = new Schema(
     email: { type: String },
     name: { type: String },
     firebase_uid: { type: String },
-    user_type: { type: String },
+    user_type: { type: Number },
     total_earning: { type: Number },
     total_referrals: { type: Number },
     total_sales: { type: Number },

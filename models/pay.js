@@ -24,22 +24,20 @@ mongoosePaginate.paginate.options = { customLabels: myCustomLabels };
 const Schema = mongoose.Schema;
 const schema = new Schema(
   {
-    app: { type: mongoose.Schema.Types.ObjectId, ref: "App", required: true },
+    app: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    promotion_code: { type: String, required: true },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
       required: true,
     },
+    salesCurrency: { type: String, required: true },
     saleAmount: { type: Number, required: true },
     saleDate: { type: Date, default: Date.now },
-    earningAmount: { type: Number, required: true },
     earningDate: { type: Date, default: Date.now },
-    affiliate: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Affiliate",
-      required: true,
-    },
-    commission: {
+    comission: {
       inCurrency: Number,
       inUSD: Number,
     },

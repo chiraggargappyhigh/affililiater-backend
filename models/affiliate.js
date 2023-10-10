@@ -26,22 +26,23 @@ const schema = new Schema(
   {
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
     },
     promotion_link: { type: String },
     promotion_code: { type: String },
     app: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "product",
-      required: true,
+      id: {
+        type: String,
+      },
+      name: { type: String },
+      description: { type: String },
+      logo: { type: String },
     },
     earnings: Number,
     referrals: Number,
     sales: Number,
     config: {
       coupon_discount: Number,
-      commission: {
+      comission: {
         type: Map,
         of: Number,
       },
@@ -52,31 +53,6 @@ const schema = new Schema(
   }
 );
 
-schema.pre("save", async function (next) {
-  this.isDeleted = false;
-  this.isActive = true;
-  if (this.password) {
-    this.password = await bcrypt.hash(this.password, 8);
-  }
-  next();
-});
-
-schema.pre("insertMany", async function (next, docs) {
-  if (docs && docs.length) {
-    for (let index = 0; index < docs.length; index++) {
-      const element = docs[index];
-      element.isDeleted = false;
-      element.isActive = true;
-    }
-  }
-  next();
-});
-
-schema.methods.isPasswordMatch = async function (password) {
-  const user = this;
-  return bcrypt.compare(password, user.password);
-};
-
 schema.method("toJSON", function () {
   const { _id, __v, ...object } = this.toObject({ virtuals: true });
   object.id = _id;
@@ -86,5 +62,5 @@ schema.method("toJSON", function () {
 });
 schema.plugin(mongoosePaginate);
 schema.plugin(idValidator);
-const user = mongoose.model("user", schema);
-module.exports = user;
+const affiliate = mongoose.model("affiliate", schema);
+module.exports = affiliate;
