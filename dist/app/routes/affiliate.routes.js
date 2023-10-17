@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const controllers_1 = require("../controllers");
+const middlewares_1 = require("../middlewares");
+const router = (0, express_1.Router)();
+const affiliateController = new controllers_1.AffiliateController();
+const authMiddleware = new middlewares_1.AuthMiddleware();
+const affiliateMiddleware = new middlewares_1.AffiliateMiddleware();
+router.post("/", authMiddleware.authenticate, affiliateController.create);
+router.get("/:productId", affiliateController.readUserAffiliate);
+router.get("/", authMiddleware.authenticate, affiliateController.listUserAffiliates);
+router.put("/update-payout/:affiliateId", authMiddleware.authenticate, affiliateMiddleware.authorizeUser, affiliateController.addPayoutDetails);
+router.get("/extra-link/:affiliateId", authMiddleware.authenticate, affiliateMiddleware.authorizeUser, affiliateController.createExtraLink);
+router.delete("/extra-link/:affiliateId", authMiddleware.authenticate, affiliateMiddleware.authorizeUser, affiliateController.deleteExtraLink);
+exports.default = router;

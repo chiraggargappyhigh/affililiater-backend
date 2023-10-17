@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RedirectService = exports.TransactionService = exports.AffiliateService = exports.ProductService = exports.UserService = exports.FirebaseService = exports.firebaseService = void 0;
+const firebase_service_1 = __importDefault(require("./firebase.service"));
+exports.FirebaseService = firebase_service_1.default;
+const user_service_1 = __importDefault(require("./user.service"));
+exports.UserService = user_service_1.default;
+const product_service_1 = __importDefault(require("./product.service"));
+exports.ProductService = product_service_1.default;
+const affiliate_service_1 = __importDefault(require("./affiliate.service"));
+exports.AffiliateService = affiliate_service_1.default;
+const transaction_service_1 = __importDefault(require("./transaction.service"));
+exports.TransactionService = transaction_service_1.default;
+const redirect_service_1 = __importDefault(require("./redirect.service"));
+exports.RedirectService = redirect_service_1.default;
+const firebaseService = new firebase_service_1.default();
+exports.firebaseService = firebaseService;

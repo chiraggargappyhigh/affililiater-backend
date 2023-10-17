@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const controllers_1 = require("../controllers");
+const middlewares_1 = require("../middlewares");
+const router = (0, express_1.Router)();
+const productController = new controllers_1.ProductController();
+const productMiddleware = new middlewares_1.ProductMiddleware();
+const authMiddleware = new middlewares_1.AuthMiddleware();
+router.post("/", authMiddleware.authenticate, productMiddleware.verifyProductData, productController.create);
+router.put("/:id/default-config", authMiddleware.authenticate, productController.addDefaultConfig);
+router.put("/:id/members", authMiddleware.authenticate, productController.addMembers);
+router.patch("/:id/members/:userId", authMiddleware.authenticate, productController.updateMember);
+router.get("/:id", authMiddleware.authenticate, productController.read);
+router.get("/", authMiddleware.authenticate, productController.list);
+exports.default = router;
