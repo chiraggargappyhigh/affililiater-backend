@@ -13,7 +13,6 @@ const env = {
     port: process.env.PORT ? parseInt(process.env.PORT) : undefined,
     mongo_uri: process.env.MONGO_URI,
     cryptoSecret: process.env.CRYPTO_SECRET,
-    shareUrl: process.env.SHARE_URL,
 };
 const config = (0, env_util_1.default)(env);
 exports.default = config;

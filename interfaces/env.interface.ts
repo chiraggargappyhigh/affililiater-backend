@@ -9,7 +9,6 @@ interface ENV {
   port?: number;
   mongo_uri?: string;
   cryptoSecret?: string;
-  shareUrl?: string;
 }
 
 type Config = Required<ENV>;

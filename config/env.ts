@@ -11,7 +11,6 @@ const env: ENV = {
   port: process.env.PORT ? parseInt(process.env.PORT) : undefined,
   mongo_uri: process.env.MONGO_URI,
   cryptoSecret: process.env.CRYPTO_SECRET,
-  shareUrl: process.env.SHARE_URL,
 };
 
 const config: Config = verifyEnv(env);
