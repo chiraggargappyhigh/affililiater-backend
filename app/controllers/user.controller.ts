@@ -12,6 +12,7 @@ class UserController {
     this.update = this.update.bind(this);
     this.read = this.read.bind(this);
     this.refreshTokens = this.refreshTokens.bind(this);
+    this.getLoginMethod = this.getLoginMethod.bind(this);
   }
 
   public async login(req: Request, res: Response, next: NextFunction) {
@@ -99,6 +100,20 @@ class UserController {
         status: "success",
         message: "Tokens refreshed successfully ",
         accessToken,
+      });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  public async getLoginMethod(req: Request, res: Response, next: NextFunction) {
+    const { email } = req.params;
+    try {
+      const loginMethod = await this.userService.getLoginMethod(email);
+      res.status(200).json({
+        status: "success",
+        message: "Login method retrieved successfully",
+        loginMethod,
       });
     } catch (error: any) {
       next(error);

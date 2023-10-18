@@ -52,7 +52,12 @@ class AffiliateService {
       applies_to: {
         products: stripeProductIds,
       },
+      metadata: {
+        affiliateEmail: user.email,
+      },
     });
+
+    console.log("coupon", coupon);
 
     let code: Stripe.PromotionCode | null = null;
 
@@ -89,6 +94,8 @@ class AffiliateService {
       throw new Error("Could not create code");
     }
 
+    console.log("code", code);
+
     return {
       code: code.code,
       codeId: code.id,
@@ -103,7 +110,7 @@ class AffiliateService {
         length: 10,
         count: 1,
         charset: "ABCDEFGHIJKLMNOPQRSTUVWXYS0123456789",
-        prefix: prefix?.substring(0, 4)?.toUpperCase() || "",
+        prefix: prefix?.substring(0, 5)?.toUpperCase() || "",
       });
       link = `${uniqueId}`;
       const existingLink = await this.affiliateModel.findOne({
@@ -164,8 +171,11 @@ class AffiliateService {
     });
     await newAffiliate.save();
 
+    const affiliate = await this.affiliateModel
+      .findById(newAffiliate._id)
+      .select("-promotionDetails.codeId -user -product");
     return {
-      affiliate: newAffiliate,
+      affiliate,
       product,
     };
   }
@@ -276,8 +286,7 @@ class AffiliateService {
   public async readUserAffiliate(userId: string, productId: string) {
     const affiliate = await this.affiliateModel
       .findOne({ user: userId, product: productId })
-      .populate("product")
-      .select("-promotionDetails.codeId");
+      .select("-promotionDetails.codeId -user -product");
     if (!affiliate) {
       throw new Error("Affiliate not found");
     }
@@ -296,6 +305,8 @@ class AffiliateService {
 
     return affiliates;
   }
+
+  public async updateRedeemableBalance(productId: string) {}
 }
 
 export default AffiliateService;

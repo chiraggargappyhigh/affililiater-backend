@@ -14,5 +14,6 @@ router.get(
   userController.refreshTokens
 );
 router.get("/", authMiddleware.authenticate, userController.read);
+router.get("/login-method/:email", userController.getLoginMethod);
 
 export default router;
