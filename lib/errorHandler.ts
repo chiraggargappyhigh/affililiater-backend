@@ -10,22 +10,25 @@ const errorHandler = (
 ) => {
   console.log(error);
   const { message } = error;
-  res.status(500).json({
+  const errData = ERRORS[message as keyof typeof ERRORS];
+  if (!errData) {
+    console.log(error);
+    res.status(500).json({
+      status: "error",
+      data: {
+        message: "Internal server error",
+      },
+    });
+    return;
+  }
+  const statusCode = errData?.status || 500;
+  if (config.node_env === "development" || config.node_env === "test") {
+    console.log(error);
+  }
+  res.status(statusCode).json({
     status: "error",
-    message,
+    data: errData,
   });
-  // const errData = ERRORS[message as keyof typeof ERRORS];
-  // const statusCode = errData?.statusCode || 500;
-  // if (config.env === "development") {
-  //   console.log(error);
-  // } else {
-  //   delete errData?.developerMessage;
-  //   delete errData?.errorCode;
-  // }
-  // res.status(statusCode).json({
-  //   status: "error",
-  //   data: errData,
-  // });
 };
 
 export default errorHandler;

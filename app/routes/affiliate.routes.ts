@@ -9,7 +9,11 @@ const authMiddleware = new AuthMiddleware();
 const affiliateMiddleware = new AffiliateMiddleware();
 
 router.post("/", authMiddleware.authenticate, affiliateController.create);
-router.get("/:productId", affiliateController.readUserAffiliate);
+router.get(
+  "/:productId",
+  authMiddleware.authenticate,
+  affiliateController.readUserAffiliate
+);
 router.get(
   "/",
   authMiddleware.authenticate,

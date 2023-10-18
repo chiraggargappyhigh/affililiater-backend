@@ -27,6 +27,8 @@ class UserService {
     this.update = this.update.bind(this);
     this.read = this.read.bind(this);
     this.generateAccessToken = this.generateAccessToken.bind(this);
+    this.getIdByEmail = this.getIdByEmail.bind(this);
+    this.getLoginMethod = this.getLoginMethod.bind(this);
   }
 
   public async create(
@@ -87,11 +89,16 @@ class UserService {
       this.privateKey,
       {
         algorithm: "RS256",
-        expiresIn: "1h",
       }
     );
 
     return token;
+  }
+
+  public async getLoginMethod(email: string) {
+    const user = await this.UserModel.findOne({ email }).select("loginMethod");
+    if (!user) throw new Error(UserError.USER_NOT_FOUND);
+    return user.loginMethod;
   }
 }
 
