@@ -215,9 +215,11 @@ class AffiliateService {
     }
     getAffiliateByCode(code) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(code);
             const affiliate = yield this.affiliateModel.findOne({
                 "promotionDetails.codeId": code,
             });
+            console.log(affiliate);
             if (!affiliate) {
                 throw new Error("Affiliate not found");
             }

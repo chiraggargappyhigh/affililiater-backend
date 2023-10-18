@@ -222,9 +222,11 @@ class AffiliateService {
   }
 
   public async getAffiliateByCode(code: string) {
+    console.log(code);
     const affiliate = await this.affiliateModel.findOne({
       "promotionDetails.codeId": code,
     });
+    console.log(affiliate);
     if (!affiliate) {
       throw new Error("Affiliate not found");
     }

@@ -87,7 +87,6 @@ class UserService {
       this.privateKey,
       {
         algorithm: "RS256",
-        expiresIn: "1h",
       }
     );
 

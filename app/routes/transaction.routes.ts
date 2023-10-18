@@ -9,13 +9,11 @@ const authMiddleware = new AuthMiddleware();
 
 router.post(
   "/",
-  authMiddleware.blockRequestsFroBrowser,
   authMiddleware.authenticatePublicWebhook,
   transactionController.create
 );
 router.post(
   "/refund",
-  authMiddleware.blockRequestsFroBrowser,
   authMiddleware.authenticatePublicWebhook,
   transactionController.refund
 );

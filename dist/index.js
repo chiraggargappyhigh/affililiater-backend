@@ -18,7 +18,7 @@ if (config_1.config.node_env === env_interface_1.NODE_ENV.development) {
     app.use((0, morgan_1.default)("dev"));
 }
 else {
-    app.use((0, morgan_1.default)("combined"));
+    app.use((0, morgan_1.default)("tiny"));
 }
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());

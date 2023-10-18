@@ -88,7 +88,6 @@ class UserService {
             userType: user.userType,
         }, this.privateKey, {
             algorithm: "RS256",
-            expiresIn: "1h",
         });
         return token;
     }

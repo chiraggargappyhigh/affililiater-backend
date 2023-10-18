@@ -14,7 +14,7 @@ const app = express();
 if (config.node_env === NODE_ENV.development) {
   app.use(morgan("dev"));
 } else {
-  app.use(morgan("combined"));
+  app.use(morgan("tiny"));
 }
 app.use(cors());
 app.use(express.json());

@@ -22,6 +22,7 @@ class TransactionController {
     create(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const { data } = req.body;
+            console.log(data);
             try {
                 const transaction = yield this.transactionService.create(data);
                 res.status(201).json({
