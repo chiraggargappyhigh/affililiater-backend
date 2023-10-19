@@ -17,13 +17,12 @@ class RedirectService {
   }
 
   private async create(data: RedirectPayload): Promise<RedirectDocument> {
-    const { code, referredFrom, referredTo, user, product } = data;
+    const { referredFrom, referredTo, user, product } = data;
     const redirect = await this.RedirectModel.create({
       user,
       product,
       referredFrom,
       referredTo,
-      codeApplied: code,
     });
 
     return redirect;
@@ -37,17 +36,13 @@ class RedirectService {
       await this.affiliateService.getRedirectLink(id);
 
     await this.create({
-      code: code as string,
       referredFrom: referrer as string,
       referredTo: id,
       user: userId,
       product: productId,
     });
 
-    if (code) {
-      return redirectUrl.replace("{{code}}", code as string);
-    }
-    return redirectUrl.replace("{{code}}", "");
+    return redirectUrl;
   }
 }
 

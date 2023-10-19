@@ -22,7 +22,7 @@ class AffiliateService {
     this.productService = new ProductService();
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
-    this.getAffiliateByCode = this.getAffiliateByCode.bind(this);
+    this.getAffiliateByCodeOrLink = this.getAffiliateByCodeOrLink.bind(this);
     this.getRedirectLink = this.getRedirectLink.bind(this);
     this.createExtraLink = this.createExtraLink.bind(this);
     this.deleteExtraLink = this.deleteExtraLink.bind(this);
@@ -231,8 +231,7 @@ class AffiliateService {
     return affiliate;
   }
 
-  public async getAffiliateByCodeOrLink(code: string, linkId?: string) {
-    console.log(code);
+  public async getAffiliateByCodeOrLink(code?: string, linkId?: string) {
     let q: any = {
       "promotionDetails.code": code,
     };

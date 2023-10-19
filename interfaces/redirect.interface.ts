@@ -13,7 +13,6 @@ interface Redirect {
 interface RedirectDocument extends Redirect, Document {}
 
 interface RedirectPayload {
-  code?: string;
   referredFrom: string;
   referredTo: string;
   user: string;

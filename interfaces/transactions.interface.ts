@@ -14,7 +14,8 @@ interface Transaction {
   product: string | Partial<Product> | Partial<ProductDocument>;
   stripeProductId: string;
   paymentIntentId: string;
-  codeUsed: string;
+  codeUsed?: string;
+  linkId?: string;
   stripeProduct?: {
     name: string;
     description: string;

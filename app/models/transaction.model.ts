@@ -24,7 +24,8 @@ const transactionSchema = new mongoose.Schema<Transaction>(
       index: true,
       unique: true,
     },
-    codeUsed: { type: String, index: true, required: true },
+    codeUsed: { type: String, index: true },
+    linkId: { type: String, index: true },
     sale: {
       amount: { type: Number, required: true },
       currency: { type: String, required: true },

@@ -15,7 +15,6 @@ const redirectSchema = new mongoose.Schema<Redirect>(
     },
     referredFrom: { type: String, required: true },
     referredTo: { type: String, required: true },
-    codeApplied: { type: String, default: null },
   },
   { timestamps: true }
 );

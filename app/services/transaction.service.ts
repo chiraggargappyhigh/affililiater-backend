@@ -27,8 +27,9 @@ class TransactionService {
   }
 
   public async create(transactionPayload: TransactionPayload) {
-    const affiliate = await this.affiliateService.getAffiliateByCode(
-      transactionPayload.code
+    const affiliate = await this.affiliateService.getAffiliateByCodeOrLink(
+      transactionPayload.code,
+      transactionPayload.linkId
     );
     const commissionPercent =
       affiliate.config.commissions[
@@ -52,6 +53,7 @@ class TransactionService {
         currency: transactionPayload.sale.currency,
       },
       codeUsed: transactionPayload.code,
+      linkId: transactionPayload.linkId,
       commission: {
         amount: commissionInCurrency,
         amountInUsd: commission,
@@ -85,8 +87,9 @@ class TransactionService {
     });
     if (!transaction) throw new Error("Transaction not found");
 
-    const affiliate = await this.affiliateService.getAffiliateByCode(
-      transaction.codeUsed
+    const affiliate = await this.affiliateService.getAffiliateByCodeOrLink(
+      transaction.codeUsed,
+      transaction?.linkId
     );
 
     const saleInUsd = await Convert(transaction.sale.amount)
