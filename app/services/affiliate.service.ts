@@ -275,25 +275,28 @@ class AffiliateService {
           },
         ],
       })
-      .populate("product")
-      .select("product user");
+      .populate("product");
 
     if (!affiliate) {
       throw new Error("Affiliate not found");
     }
 
     const product = affiliate.product as ProductDocument;
-    const redirectLink = product.urls.redirect;
+    const redirectLink = product.urls.redirect + `?rId=${link}`;
 
     let returnObj: any = {
       productId: product._id,
       userId: affiliate.user,
       redirectUrl: redirectLink,
     };
+
+    console.log(returnObj);
+    console.log(affiliate);
     if (affiliate.config.couponDiscount > 0) {
       returnObj.redirectUrl =
-        redirectLink + `?code=${affiliate.promotionDetails.code}`;
+        redirectLink + `&code=${affiliate.promotionDetails.code}`;
     }
+    console.log(returnObj);
     return returnObj;
   }
 
