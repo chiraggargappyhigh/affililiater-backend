@@ -231,11 +231,28 @@ class AffiliateService {
     return affiliate;
   }
 
-  public async getAffiliateByCode(code: string) {
+  public async getAffiliateByCodeOrLink(code: string, linkId?: string) {
     console.log(code);
-    const affiliate = await this.affiliateModel.findOne({
-      "promotionDetails.codeId": code,
-    });
+    let q: any = {
+      "promotionDetails.code": code,
+    };
+
+    if (linkId) {
+      q = {
+        $or: [
+          {
+            "promotionDetails.code": code,
+          },
+          {
+            "promotionDetails.extraLinks": linkId,
+          },
+          {
+            "promotionDetails.defaultLink": linkId,
+          },
+        ],
+      };
+    }
+    const affiliate = await this.affiliateModel.findOne(q);
     console.log(affiliate);
     if (!affiliate) {
       throw new Error("Affiliate not found");
@@ -245,8 +262,7 @@ class AffiliateService {
   }
 
   public async getRedirectLink(
-    link: string,
-    code?: string | null
+    link: string
   ): Promise<{ redirectUrl: string; productId: string; userId: string }> {
     console.log("link", link);
     const affiliate = await this.affiliateModel
@@ -273,13 +289,12 @@ class AffiliateService {
     let returnObj: any = {
       productId: product._id,
       userId: affiliate.user,
+      redirectUrl: redirectLink,
     };
-    if (!code) {
-      returnObj.redirectUrl = redirectLink.replace("{{CODE}}", "");
-      return returnObj;
+    if (affiliate.config.couponDiscount > 0) {
+      returnObj.redirectUrl =
+        redirectLink + `?code=${affiliate.promotionDetails.code}`;
     }
-
-    returnObj.redirectUrl = redirectLink.replace("{{CODE}}", code);
     return returnObj;
   }
 

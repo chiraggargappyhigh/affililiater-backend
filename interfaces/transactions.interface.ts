@@ -39,6 +39,7 @@ interface TransactionPayload {
   code: string;
   stripeProductId: string;
   paymentIntentId: string;
+  linkId?: string;
   sale: {
     amount: number;
     currency: string;

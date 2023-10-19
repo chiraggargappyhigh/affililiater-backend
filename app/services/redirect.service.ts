@@ -32,10 +32,9 @@ class RedirectService {
   public async handleRedirect(req: Request) {
     let { id } = req.params;
     const referrer = req.headers.referrer || req.headers.referer || "unknown";
-    const { code } = req.query;
 
     const { userId, productId, redirectUrl } =
-      await this.affiliateService.getRedirectLink(id, code as string);
+      await this.affiliateService.getRedirectLink(id);
 
     await this.create({
       code: code as string,

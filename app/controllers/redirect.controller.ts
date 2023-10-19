@@ -13,6 +13,9 @@ class RedirectController {
   public async handleRedirect(req: Request, res: Response, next: NextFunction) {
     try {
       const redirectUrl = await this.redirectService.handleRedirect(req);
+      res.cookie("_affiliate_redirect_id_", req.params.id, {
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      });
       res.redirect(redirectUrl);
     } catch (error) {
       next(error);
