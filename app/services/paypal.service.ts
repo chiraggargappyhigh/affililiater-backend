@@ -1,6 +1,7 @@
 import AffiliateService from "./affiliate.service";
 import axios, { AxiosInstance } from "axios";
 import { config } from "../../config";
+import FormData from "form-data";
 
 class PaypalService {
   private affiliateService: AffiliateService;
