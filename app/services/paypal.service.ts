@@ -55,7 +55,7 @@ class PaypalService {
     const userData = await this.getUserData(token);
     const affiliate = await this.affiliateService.update(affiliateId, {
       $set: {
-        payment: {
+        payout: {
           paypalEmail: userData.email,
           paypalName: userData.name,
         },

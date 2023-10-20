@@ -12,7 +12,6 @@ class AffiliateController {
     this.create = this.create.bind(this);
     this.readUserAffiliate = this.readUserAffiliate.bind(this);
     this.listUserAffiliates = this.listUserAffiliates.bind(this);
-    this.addPayoutDetails = this.addPayoutDetails.bind(this);
     this.createExtraLink = this.createExtraLink.bind(this);
     this.deleteExtraLink = this.deleteExtraLink.bind(this);
   }
@@ -34,34 +33,6 @@ class AffiliateController {
         status: "success",
         message: `You're now an affiliate for ${product.name}!`,
         affiliate,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  public async addPayoutDetails(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    const { data } = req.body as {
-      data: Partial<Affiliate["payout"]>;
-    };
-    const { id: affiliateId } = req.params;
-    try {
-      const affiliate = await this.affiliateService.update(affiliateId, {
-        $set: {
-          payout: {
-            ...data,
-            paypalEmail: data.paypalEmail!,
-          },
-        },
-      });
-      res.status(200).json({
-        status: "success",
-        message: "Affiliate payout details updated successfully",
-        data: affiliate,
       });
     } catch (error) {
       next(error);

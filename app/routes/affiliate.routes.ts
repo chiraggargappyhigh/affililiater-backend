@@ -19,12 +19,6 @@ router.get(
   authMiddleware.authenticate,
   affiliateController.listUserAffiliates
 );
-router.put(
-  "/update-payout/:affiliateId",
-  authMiddleware.authenticate,
-  affiliateMiddleware.authorizeUser,
-  affiliateController.addPayoutDetails
-);
 router.get(
   "/extra-link/:affiliateId",
   authMiddleware.authenticate,
