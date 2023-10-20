@@ -24,7 +24,7 @@ interface Affiliate {
   refunds: number;
   payout: {
     paypalEmail: string;
-    paypalId: string;
+    paypalName: string;
   };
   payment: {
     redeemable: number;
