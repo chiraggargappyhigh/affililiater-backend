@@ -1,7 +1,7 @@
 import AffiliateService from "./affiliate.service";
 import axios, { AxiosInstance } from "axios";
 import { config } from "../../config";
-import FormData from "form-data";
+import qs from "qs";
 
 class PaypalService {
   private affiliateService: AffiliateService;
@@ -18,12 +18,12 @@ class PaypalService {
   }
 
   private async getAccessToken(authCode: string) {
-    const formData = new FormData();
-    formData.append("grant_type", "authorization_code");
-    formData.append("code", authCode);
     const { data } = await this.axiosInstance.post(
       "/v1/identity/openidconnect/tokenservice",
-      formData,
+      qs.stringify({
+        grant_type: "authorization_code",
+        code: authCode,
+      }),
       {
         headers: {
           Authorization: `Basic ${Buffer.from(
