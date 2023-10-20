@@ -11,6 +11,9 @@ class PaypalService {
     this.affiliateService = new AffiliateService();
     this.axiosInstance = axios.create({
       baseURL: config.paypalUrl,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
     });
   }
 
