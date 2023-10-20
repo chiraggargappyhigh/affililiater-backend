@@ -6,6 +6,8 @@ class PaypalController {
 
   constructor() {
     this.paypalService = new PaypalService();
+
+    this.connectPaypal = this.connectPaypal.bind(this);
   }
 
   public async connectPaypal(

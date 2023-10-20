@@ -15,7 +15,7 @@ class PaypalService {
 
   private async getAccessToken(authCode: string) {
     const { data } = await this.axiosInstance.post(
-      "/v1/oauth2/token",
+      "/v1/identity/openidconnect/tokenservice",
       {
         grant_type: "authorization_code",
         code: authCode,
