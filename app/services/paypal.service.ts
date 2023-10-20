@@ -14,12 +14,12 @@ class PaypalService {
   }
 
   private async getAccessToken(authCode: string) {
+    const formData = new FormData();
+    formData.append("grant_type", "authorization_code");
+    formData.append("code", authCode);
     const { data } = await this.axiosInstance.post(
       "/v1/identity/openidconnect/tokenservice",
-      {
-        grant_type: "authorization_code",
-        code: authCode,
-      },
+      formData,
       {
         headers: {
           Authorization: `Basic ${Buffer.from(
@@ -35,7 +35,7 @@ class PaypalService {
 
   private async getUserData(token: string) {
     const { data } = await this.axiosInstance.get(
-      "/v1/identity/oauth2/userinfo",
+      "/v1/oauth2/token/userinfo?schema=openid",
       {
         headers: {
           Authorization: `Bearer ${token}`,
