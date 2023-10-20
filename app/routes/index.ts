@@ -4,6 +4,8 @@ import ProductRouter from "./product.routes";
 import AffiliateRouter from "./affiliate.routes";
 import TransactionRouter from "./transaction.routes";
 import RedirectRouter from "./redirect.routes";
+import PayoutRouter from "./payout.routes";
+import PaypalRouter from "./paypal.routes";
 // Init router and path
 const router = Router();
 
@@ -13,6 +15,8 @@ router.use("/product", ProductRouter);
 router.use("/affiliate", AffiliateRouter);
 router.use("/transaction", TransactionRouter);
 router.use("/redirect", RedirectRouter.router);
+router.use("/payout", PayoutRouter);
+router.use("/paypal", PaypalRouter);
 
 // Export the base-router
 export default router;

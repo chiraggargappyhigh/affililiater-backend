@@ -8,6 +8,8 @@ class PayoutService {
   constructor() {
     this.transactionModel = TransactionModel;
     this.affiliateModel = AffiliateModel;
+
+    this.updateRedeemableBalance = this.updateRedeemableBalance.bind(this);
   }
 
   public async updateRedeemableBalance(productId: string, userId: string) {
@@ -59,3 +61,5 @@ class PayoutService {
     return updatedAffiliate;
   }
 }
+
+export default PayoutService;

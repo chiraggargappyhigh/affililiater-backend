@@ -6,7 +6,6 @@ import {
   Product,
   ProductPermissionValues,
 } from "../../interfaces";
-import AES from "crypto-js/aes";
 import { config } from "../../config";
 import Stripe from "stripe";
 import * as _ from "lodash";
@@ -31,8 +30,7 @@ class ProductService {
     commissions: Product["defaultConfig"]["commissions"],
     key: string
   ) {
-    const decodedKey = AES.decrypt(key, config.cryptoSecret).toString();
-    const stripe = new Stripe(decodedKey, {
+    const stripe = new Stripe(key, {
       apiVersion: "2023-08-16",
     });
 
@@ -45,14 +43,22 @@ class ProductService {
         await stripe.prices.list({
           product: product.id,
           active: true,
+          expand: ["data.currency_options"],
         })
       ).data;
 
+      console.log(stripePrices);
+
       const prices = await stripePrices.map((price) => {
-        let returnObj: any = {};
+        let returnObj: any = {
+          prices: {},
+          name: price?.nickname,
+        };
 
         if (price.recurring) {
           returnObj.interval = `${price.recurring?.interval_count}_${price.recurring?.interval}`;
+        } else {
+          returnObj.interval = null;
         }
         if (price.currency_options) {
           for (let [key, value] of Object.entries(price.currency_options)) {
@@ -73,8 +79,11 @@ class ProductService {
         name: product.name,
         description: product.description,
         image: product.images[0],
-        interval: prices[0].interval,
-        prices: prices[0].prices,
+        prices: prices.map((price) => ({
+          prices: price.prices,
+          interval: price.interval,
+          name: price.name,
+        })),
         commission: commissions[product.id],
       };
     });
@@ -145,14 +154,21 @@ class ProductService {
   }
 
   public async read(id: string) {
-    const product = (await this.ProductModel.findById(id)) as ProductDocument;
+    const product = await this.ProductModel.findById(id).lean();
+    if (!product) throw new Error("Product not found");
     const stripeProducts = await this.populateStripeProducts(
       product.defaultConfig.commissions,
       product.stripeKey
     );
-    product.stripeProducts = stripeProducts;
 
-    return product;
+    const returnProduct: any = product;
+    delete returnProduct.stripeKey;
+    delete returnProduct.defaultConfig;
+    delete returnProduct.members;
+    return {
+      ...returnProduct,
+      stripeProducts,
+    };
   }
 
   public async list() {

@@ -17,6 +17,8 @@ class ProductController {
     this.addDefaultConfig = this.addDefaultConfig.bind(this);
     this.addMembers = this.addMembers.bind(this);
     this.updateMember = this.updateMember.bind(this);
+    this.read = this.read.bind(this);
+    this.list = this.list.bind(this);
   }
 
   public async create(req: Request, res: Response, next: NextFunction) {
@@ -68,7 +70,8 @@ class ProductController {
   public async read(req: Request, res: Response, next: NextFunction) {
     const { id: productId } = req.params;
     try {
-      const product = await this.productService.getProduct(productId);
+      const product = await this.productService.read(productId);
+      console.log("product", product);
       res.status(200).json({
         status: "success",
         message: "Product found",

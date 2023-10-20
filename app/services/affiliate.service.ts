@@ -322,8 +322,6 @@ class AffiliateService {
 
     return affiliates;
   }
-
-  public async updateRedeemableBalance(productId: string) {}
 }
 
 export default AffiliateService;

@@ -41,10 +41,13 @@ interface Product {
     name: string;
     description: string | null;
     image?: string;
-    interval?: string;
     prices?: {
-      [currency: string]: number;
-    };
+      interval: string | null;
+      prices: {
+        [currency: string]: number;
+      };
+      name?: string;
+    }[];
     commission?: number;
   }>;
   promotionalAssets: Array<string | Partial<Asset> | Partial<AssetDocument>>;

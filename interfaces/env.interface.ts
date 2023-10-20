@@ -9,6 +9,9 @@ interface ENV {
   port?: number;
   mongo_uri?: string;
   cryptoSecret?: string;
+  paypalClientId?: string;
+  paypalClientSecret?: string;
+  paypalUrl?: string;
 }
 
 type Config = Required<ENV>;
