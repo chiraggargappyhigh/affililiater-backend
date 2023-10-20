@@ -25,10 +25,11 @@ class PaypalController {
     };
 
     try {
-      await this.paypalService.connectPaypal(affiliateId, code);
+      const payout = await this.paypalService.connectPaypal(affiliateId, code);
       res.status(200).json({
         status: "success",
         message: "Paypal connected successfully",
+        payout,
       });
     } catch (error) {
       next(error);

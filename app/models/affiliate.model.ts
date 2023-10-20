@@ -35,7 +35,7 @@ const affiliateSchema = new mongoose.Schema<AffiliateDocument>(
     refunds: { type: Number, default: 0 },
     payout: {
       paypalEmail: { type: String },
-      paypalId: { type: String },
+      paypalName: { type: String },
     },
     payment: {
       redeemable: { type: Number, default: 0 },

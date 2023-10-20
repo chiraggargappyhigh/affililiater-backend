@@ -47,23 +47,21 @@ class PaypalService {
       }
     );
 
-    console.log("data", data);
     return data;
   }
 
   public async connectPaypal(affiliateId: string, authCode: string) {
     const token = await this.getAccessToken(authCode);
     const userData = await this.getUserData(token);
-    return;
     const affiliate = await this.affiliateService.update(affiliateId, {
       $set: {
         payment: {
           paypalEmail: userData.email,
-          paypalId: userData.user_id,
+          paypalName: userData.name,
         },
       },
     });
-    return affiliate;
+    return affiliate.payout;
   }
 }
 
