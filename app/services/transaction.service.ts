@@ -34,6 +34,8 @@ class TransactionService {
     const commissionPercent =
       affiliate.config.commissions[
         transactionPayload.stripeProductId as keyof typeof affiliate.config.commissions
+      ][
+        transactionPayload.stripePriceId as keyof (typeof affiliate.config.commissions)[typeof transactionPayload.stripeProductId]
       ];
     const commissionInCurrency =
       (transactionPayload.sale.amount * commissionPercent) / 10000;
@@ -47,6 +49,7 @@ class TransactionService {
       user: affiliate.user,
       product: affiliate.product,
       stripeProductId: transactionPayload.stripeProductId,
+      stripePriceId: transactionPayload.stripePriceId,
       paymentIntentId: transactionPayload.paymentIntentId,
       sale: {
         amount: transactionPayload.sale.amount / 100,

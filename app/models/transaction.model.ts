@@ -18,6 +18,7 @@ const transactionSchema = new mongoose.Schema<Transaction>(
       required: true,
     },
     stripeProductId: { type: String, required: true },
+    stripePriceId: { type: String, required: true },
     paymentIntentId: {
       type: String,
       required: true,

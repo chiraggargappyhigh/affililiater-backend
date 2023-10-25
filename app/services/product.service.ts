@@ -47,12 +47,15 @@ class ProductService {
         })
       ).data;
 
-      console.log(stripePrices);
-
       const prices = await stripePrices.map((price) => {
+        console.log(product.id, price.id, commissions);
+        if (commissions[product.id][price.id] === undefined) {
+          return null;
+        }
         let returnObj: any = {
           prices: {},
           name: price?.nickname,
+          commission: commissions[product.id][price.id],
         };
 
         if (price.recurring) {
@@ -75,16 +78,19 @@ class ProductService {
         return returnObj;
       });
 
+      console.log(prices);
+
+      const sanitizedPrices = prices.filter((price) => price !== null);
       return {
         name: product.name,
         description: product.description,
         image: product.images[0],
-        prices: prices.map((price) => ({
+        prices: sanitizedPrices.map((price) => ({
           prices: price.prices,
           interval: price.interval,
           name: price.name,
+          commission: price.commission,
         })),
-        commission: commissions[product.id],
       };
     });
 
@@ -154,7 +160,9 @@ class ProductService {
   }
 
   public async read(id: string) {
-    const product = await this.ProductModel.findById(id).lean();
+    const product = await this.ProductModel.findById(id)
+      .populate("promotionalAssets")
+      .lean();
     if (!product) throw new Error("Product not found");
     const stripeProducts = await this.populateStripeProducts(
       product.defaultConfig.commissions,

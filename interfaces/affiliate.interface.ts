@@ -8,7 +8,9 @@ interface Affiliate {
   config: {
     couponDiscount: number;
     commissions: {
-      [stripeProductId: string]: number;
+      [stripeProductId: string]: {
+        [stripePriceId: string]: number;
+      };
     };
     bufferDays: number;
   };

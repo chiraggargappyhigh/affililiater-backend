@@ -32,7 +32,9 @@ interface Product {
   defaultConfig: {
     couponDiscount: number;
     commissions: {
-      [stripeProductId: string]: number;
+      [stripeProductId: string]: {
+        [stripePriceId: string]: number;
+      };
     };
     bufferDays: number;
   };
@@ -47,8 +49,8 @@ interface Product {
         [currency: string]: number;
       };
       name?: string;
+      commission: number;
     }[];
-    commission?: number;
   }>;
   promotionalAssets: Array<string | Partial<Asset> | Partial<AssetDocument>>;
   createdAt: Date;

@@ -13,6 +13,7 @@ interface Transaction {
   user: string | Partial<User> | Partial<UserDocument>;
   product: string | Partial<Product> | Partial<ProductDocument>;
   stripeProductId: string;
+  stripePriceId: string;
   paymentIntentId: string;
   codeUsed?: string;
   linkId?: string;
@@ -39,6 +40,7 @@ interface TransactionDocument extends Transaction, Document {}
 interface TransactionPayload {
   code: string;
   stripeProductId: string;
+  stripePriceId: string;
   paymentIntentId: string;
   linkId?: string;
   sale: {
