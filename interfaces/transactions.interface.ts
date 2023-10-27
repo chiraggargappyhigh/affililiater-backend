@@ -4,9 +4,10 @@ import { Product, ProductDocument } from "./product.interface";
 
 enum TransactionStatus {
   Created = 0,
-  REDEEMABLE = 1,
-  REDEEMED = 2,
-  REFUNDED = 3,
+  COMMISSION_ALLOCATED = 1,
+  REDEEMABLE = 2,
+  REDEEMED = 3,
+  REFUNDED = 4,
 }
 
 interface Transaction {
@@ -15,6 +16,7 @@ interface Transaction {
   stripeProductId: string;
   stripePriceId: string;
   paymentIntentId: string;
+  subscriptionId: string;
   codeUsed?: string;
   linkId?: string;
   stripeProduct?: {
@@ -37,12 +39,17 @@ interface Transaction {
 
 interface TransactionDocument extends Transaction, Document {}
 
+interface CreateTransactionPayload {
+  subscriptionId: string;
+}
+
 interface TransactionPayload {
   code: string;
+  subscriptionId: string;
   stripeProductId: string;
   stripePriceId: string;
   paymentIntentId: string;
-  linkId?: string;
+  refId?: string;
   sale: {
     amount: number;
     currency: string;
@@ -59,4 +66,5 @@ export {
   TransactionPayload,
   TransactionStatusValues,
   TransactionStatus,
+  CreateTransactionPayload,
 };

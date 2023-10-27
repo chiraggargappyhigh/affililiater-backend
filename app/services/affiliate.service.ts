@@ -104,13 +104,14 @@ class AffiliateService {
 
   public async createPromotionalUrl(prefix?: string) {
     let link: string | null = null;
+    const sanitizedPrefix = prefix?.replace(/[^a-zA-Z0-9]/g, "") || "";
     const { generate } = await import("referral-codes");
     for (let i = 0; i < 10; i++) {
       const uniqueId = generate({
         length: 10,
         count: 1,
         charset: "ABCDEFGHIJKLMNOPQRSTUVWXYS0123456789",
-        prefix: prefix?.substring(0, 5)?.toUpperCase() || "",
+        prefix: sanitizedPrefix?.substring(0, 5)?.toUpperCase(),
       });
       link = `${uniqueId}`;
       const existingLink = await this.affiliateModel.findOne({

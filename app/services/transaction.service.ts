@@ -1,4 +1,5 @@
 import {
+  CreateTransactionPayload,
   Transaction,
   TransactionDocument,
   TransactionPayload,
@@ -20,16 +21,27 @@ class TransactionService {
     this.userService = new UserService();
 
     this.create = this.create.bind(this);
+    this.addAffiliateCommission = this.addAffiliateCommission.bind(this);
     this.refund = this.refund.bind(this);
     this.listByUser = this.listByUser.bind(this);
     this.listByProduct = this.listByProduct.bind(this);
     this.listByAffiliate = this.listByAffiliate.bind(this);
   }
 
-  public async create(transactionPayload: TransactionPayload) {
+  public async create(transactionPayload: CreateTransactionPayload) {
+    const newTransaction = new this.transactionModel({
+      subscriptionId: transactionPayload.subscriptionId,
+    });
+
+    await newTransaction.save();
+
+    return newTransaction;
+  }
+
+  public async addAffiliateCommission(transactionPayload: TransactionPayload) {
     const affiliate = await this.affiliateService.getAffiliateByCodeOrLink(
       transactionPayload.code,
-      transactionPayload.linkId
+      transactionPayload.refId
     );
     const commissionPercent =
       affiliate.config.commissions[
@@ -45,43 +57,55 @@ class TransactionService {
       .to("USD");
     const commission = (saleInUsd * commissionPercent) / 100;
 
-    const newTransaction = new this.transactionModel({
-      user: affiliate.user,
-      product: affiliate.product,
-      stripeProductId: transactionPayload.stripeProductId,
-      stripePriceId: transactionPayload.stripePriceId,
-      paymentIntentId: transactionPayload.paymentIntentId,
-      sale: {
-        amount: transactionPayload.sale.amount / 100,
-        currency: transactionPayload.sale.currency,
+    // update transaction
+    const transaction = await this.transactionModel.findOneAndUpdate(
+      {
+        subscriptionId: transactionPayload.subscriptionId,
       },
-      codeUsed: transactionPayload.code,
-      linkId: transactionPayload.linkId,
-      commission: {
-        amount: commissionInCurrency,
-        amountInUsd: commission,
-        percent: commissionPercent,
+      {
+        $set: {
+          user: affiliate.user,
+          product: affiliate.product,
+          stripeProductId: transactionPayload.stripeProductId,
+          stripePriceId: transactionPayload.stripePriceId,
+          paymentIntentId: transactionPayload.paymentIntentId,
+          codeUsed: transactionPayload.code,
+          linkId: transactionPayload.refId,
+          sale: {
+            amount: transactionPayload.sale.amount,
+            currency: transactionPayload.sale.currency,
+          },
+          commission: {
+            amount: commissionInCurrency,
+            amountInUsd: commission,
+            percent: commissionPercent,
+          },
+          status: TransactionStatus.COMMISSION_ALLOCATED,
+        },
       },
-    });
+      {
+        new: true,
+      }
+    );
 
-    await newTransaction.save();
-
+    // update affiliate
     affiliate.earnings += commission;
-    affiliate.referrals += 1;
     affiliate.sales += saleInUsd;
+    affiliate.referrals += 1;
     affiliate.payment.inBuffer += commission;
 
     await affiliate.save();
 
+    // update user
     await this.userService.update(affiliate.user as string, {
       $inc: {
         totalEarnings: commission,
-        totalReferrals: 1,
         totalSales: saleInUsd,
+        totalReferrals: 1,
       },
     });
 
-    return newTransaction;
+    return transaction;
   }
 
   public async refund(paymentIntentId: string) {

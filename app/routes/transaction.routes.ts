@@ -12,6 +12,12 @@ router.post(
   authMiddleware.authenticatePublicWebhook,
   transactionController.create
 );
+
+router.post(
+  "/commission",
+  authMiddleware.authenticatePublicWebhook,
+  transactionController.addAffiliateCommission
+);
 router.post(
   "/refund",
   authMiddleware.authenticatePublicWebhook,

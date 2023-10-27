@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { TransactionService } from "../services";
 import {
+  CreateTransactionPayload,
   Transaction,
   TransactionDocument,
   TransactionPayload,
@@ -20,13 +21,32 @@ class TransactionController {
   }
 
   public async create(req: Request, res: Response, next: NextFunction) {
-    const { data } = req.body as { data: TransactionPayload };
-    console.log(data);
+    const { data } = req.body as { data: CreateTransactionPayload };
     try {
       const transaction = await this.transactionService.create(data);
       res.status(201).json({
         status: "success",
         message: "Transaction created successfully",
+        transaction,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async addAffiliateCommission(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { data } = req.body as { data: TransactionPayload };
+    try {
+      const transaction = await this.transactionService.addAffiliateCommission(
+        data
+      );
+      res.status(201).json({
+        status: "success",
+        message: "Affiliate commission added successfully",
         transaction,
       });
     } catch (error) {
