@@ -41,6 +41,7 @@ interface TransactionDocument extends Transaction, Document {}
 
 interface CreateTransactionPayload {
   subscriptionId: string;
+  refId: string;
 }
 
 interface TransactionPayload {
@@ -49,7 +50,6 @@ interface TransactionPayload {
   stripeProductId: string;
   stripePriceId: string;
   paymentIntentId: string;
-  refId?: string;
   sale: {
     amount: number;
     currency: string;

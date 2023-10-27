@@ -31,6 +31,7 @@ class TransactionService {
   public async create(transactionPayload: CreateTransactionPayload) {
     const newTransaction = new this.transactionModel({
       subscriptionId: transactionPayload.subscriptionId,
+      linkId: transactionPayload.refId,
     });
 
     await newTransaction.save();
@@ -39,9 +40,12 @@ class TransactionService {
   }
 
   public async addAffiliateCommission(transactionPayload: TransactionPayload) {
+    const transaction = await this.transactionModel.findOne({
+      subscriptionId: transactionPayload.subscriptionId,
+    });
     const affiliate = await this.affiliateService.getAffiliateByCodeOrLink(
       transactionPayload.code,
-      transactionPayload.refId
+      transaction?.linkId
     );
     const commissionPercent =
       affiliate.config.commissions[
@@ -70,7 +74,6 @@ class TransactionService {
           stripePriceId: transactionPayload.stripePriceId,
           paymentIntentId: transactionPayload.paymentIntentId,
           codeUsed: transactionPayload.code,
-          linkId: transactionPayload.refId,
           sale: {
             amount: transactionPayload.sale.amount,
             currency: transactionPayload.sale.currency,
