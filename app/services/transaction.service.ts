@@ -62,7 +62,7 @@ class TransactionService {
     const commission = (saleInUsd * commissionPercent) / 100;
 
     // update transaction
-    const transaction = await this.transactionModel.findOneAndUpdate(
+    const updatedTransaction = await this.transactionModel.findOneAndUpdate(
       {
         subscriptionId: transactionPayload.subscriptionId,
       },
@@ -108,7 +108,7 @@ class TransactionService {
       },
     });
 
-    return transaction;
+    return updatedTransaction;
   }
 
   public async refund(paymentIntentId: string) {
