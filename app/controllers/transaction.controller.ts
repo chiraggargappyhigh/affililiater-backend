@@ -14,6 +14,7 @@ class TransactionController {
     this.transactionService = new TransactionService();
 
     this.create = this.create.bind(this);
+    this.addAffiliateCommission = this.addAffiliateCommission.bind(this);
     this.refund = this.refund.bind(this);
     this.listByUser = this.listByUser.bind(this);
     this.listByProduct = this.listByProduct.bind(this);
