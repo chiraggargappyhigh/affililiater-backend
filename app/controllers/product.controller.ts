@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ProductService, UserService } from "../services";
+import { productService, userService } from "../services";
 import {
   Product,
   ProductPermission,
@@ -8,11 +8,9 @@ import {
 } from "../../interfaces";
 
 class ProductController {
-  private productService: ProductService;
-  private userService: UserService;
+  private productService: typeof productService = productService;
+  private userService: typeof userService = userService;
   constructor() {
-    this.productService = new ProductService();
-    this.userService = new UserService();
     this.create = this.create.bind(this);
     this.addDefaultConfig = this.addDefaultConfig.bind(this);
     this.addMembers = this.addMembers.bind(this);

@@ -1,4 +1,4 @@
-import { firebaseService, FirebaseService } from ".";
+import { firebaseService } from ".";
 import { UserDocument, UserType, UserLoginMethod } from "../../interfaces";
 import { UserModel } from "../models";
 import jwt from "jsonwebtoken";
@@ -8,14 +8,12 @@ import { UserError } from "../../constants/errors";
 import { QueryOptions } from "mongoose";
 
 class UserService {
-  private firebaseService: FirebaseService;
-  private UserModel: typeof UserModel;
+  private firebaseService: typeof firebaseService = firebaseService;
+  private UserModel: typeof UserModel = UserModel;
   private privateKey: string;
   private publicKey: string;
 
   constructor() {
-    this.firebaseService = firebaseService;
-    this.UserModel = UserModel;
     this.privateKey = fs
       .readFileSync(path.join(__dirname, "..", "..", "secrets", "private.pem"))
       .toString();

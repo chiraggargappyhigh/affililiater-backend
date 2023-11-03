@@ -1,14 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { AffiliateService } from "../services";
+import { affiliateService } from "../services";
 import { Affiliate, UserDocument } from "../../interfaces";
 import { config } from "../../config";
 
 class AffiliateController {
-  private affiliateService: AffiliateService;
+  private affiliateService: typeof affiliateService = affiliateService;
 
   constructor() {
-    this.affiliateService = new AffiliateService();
-
     this.create = this.create.bind(this);
     this.readUserAffiliate = this.readUserAffiliate.bind(this);
     this.listUserAffiliates = this.listUserAffiliates.bind(this);

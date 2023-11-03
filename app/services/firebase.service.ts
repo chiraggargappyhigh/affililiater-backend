@@ -2,10 +2,8 @@ import { Auth } from "firebase-admin/auth";
 import { auth } from "../../lib/firebase";
 
 export class FirebaseService {
-  private auth: Auth;
+  private auth: Auth = auth;
   constructor() {
-    this.auth = auth;
-
     this.getUserByIdToken = this.getUserByIdToken.bind(this);
     this.getUserByFirebaseUid = this.getUserByFirebaseUid.bind(this);
   }

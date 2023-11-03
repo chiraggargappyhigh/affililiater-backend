@@ -1,16 +1,27 @@
 import { Router } from "express";
 import { PayoutController } from "../controllers";
-import { AuthMiddleware } from "../middlewares";
+import { authMiddleware } from "../middlewares";
 
 const router = Router();
 
 const payoutController = new PayoutController();
-const authMiddleware = new AuthMiddleware();
 
 router.get(
   "/balance/:productId",
   authMiddleware.authenticate,
   payoutController.updateRedeemableBalance
+);
+
+router.post(
+  "/:productId",
+  authMiddleware.authenticate,
+  payoutController.createPayoutRequest
+);
+
+router.get(
+  "/:productId",
+  authMiddleware.authenticate,
+  payoutController.listPayoutRequests
 );
 
 export default router;

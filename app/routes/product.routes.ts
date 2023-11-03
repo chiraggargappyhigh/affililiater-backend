@@ -1,13 +1,10 @@
 import { Router } from "express";
 import { ProductController } from "../controllers";
-import { ProductMiddleware, AuthMiddleware } from "../middlewares";
+import { productMiddleware, authMiddleware } from "../middlewares";
 
 const router = Router();
 
 const productController = new ProductController();
-const productMiddleware = new ProductMiddleware();
-
-const authMiddleware = new AuthMiddleware();
 
 router.post(
   "/",

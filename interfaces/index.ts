@@ -6,3 +6,4 @@ export * from "./assets.interface";
 export * from "./error.interface";
 export * from "./transactions.interface";
 export * from "./redirect.interface";
+export * from "./payout.interface";

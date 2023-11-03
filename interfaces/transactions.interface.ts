@@ -3,7 +3,7 @@ import { User, UserDocument } from "./user.interface";
 import { Product, ProductDocument } from "./product.interface";
 
 enum TransactionStatus {
-  Created = 0,
+  CREATED = 0,
   COMMISSION_ALLOCATED = 1,
   REDEEMABLE = 2,
   REDEEMED = 3,

@@ -6,20 +6,15 @@ import {
   TransactionStatus,
 } from "../../interfaces";
 import { TransactionModel } from "../models";
-import AffiliateService from "./affiliate.service";
-import UserService from "./user.service";
+import { affiliateService, userService } from ".";
 import { Convert } from "easy-currencies";
 
 class TransactionService {
-  private transactionModel: typeof TransactionModel;
-  private affiliateService: AffiliateService;
-  private userService: UserService;
+  private transactionModel: typeof TransactionModel = TransactionModel;
+  private affiliateService: typeof affiliateService = affiliateService;
+  private userService: typeof userService = userService;
 
   constructor() {
-    this.transactionModel = TransactionModel;
-    this.affiliateService = new AffiliateService();
-    this.userService = new UserService();
-
     this.create = this.create.bind(this);
     this.addAffiliateCommission = this.addAffiliateCommission.bind(this);
     this.refund = this.refund.bind(this);

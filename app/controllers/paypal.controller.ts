@@ -1,12 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { PaypalService } from "../services";
+import { paypalService } from "../services";
 
 class PaypalController {
-  private paypalService: PaypalService;
+  private paypalService: typeof paypalService = paypalService;
 
   constructor() {
-    this.paypalService = new PaypalService();
-
     this.connectPaypal = this.connectPaypal.bind(this);
   }
 

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { TransactionService } from "../services";
+import { transactionService } from "../services";
 import {
   CreateTransactionPayload,
   Transaction,
@@ -9,10 +9,8 @@ import {
 } from "../../interfaces";
 
 class TransactionController {
-  private transactionService: TransactionService;
+  private transactionService: typeof transactionService = transactionService;
   constructor() {
-    this.transactionService = new TransactionService();
-
     this.create = this.create.bind(this);
     this.addAffiliateCommission = this.addAffiliateCommission.bind(this);
     this.refund = this.refund.bind(this);
