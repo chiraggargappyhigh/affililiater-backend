@@ -46,15 +46,11 @@ class PaypalController {
       if (resource_type === "payouts") {
         const batchId = resource.batch_header.payout_batch_id;
         const status = resource.batch_header.batch_status;
-        console.log("batchId - payouts", batchId);
-        console.log("status - payouts", status);
-        // await this.payoutService.updatePayoutStatus(batchId, status);
+        await this.payoutService.updatePayoutStatus(batchId, status);
       } else if (resource_type === "payouts_item") {
         const batchId = resource.payout_batch_id;
         const status = resource.transaction_status;
-        // await this.payoutService.updatePayoutItemStatus(batchId, status);
-        console.log("batchId - payouts item", batchId);
-        console.log("status - payouts item", status);
+        await this.payoutService.updatePayoutStatus(batchId, status);
       } else {
         throw new Error("Invalid resource type");
       }

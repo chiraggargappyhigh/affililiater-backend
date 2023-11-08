@@ -1,6 +1,7 @@
 import { PayoutStatus, TransactionStatus } from "../../interfaces";
 import { TransactionModel, AffiliateModel, PayoutModel } from "../models";
 import { paypalService } from ".";
+import { config } from "../../config";
 
 class PayoutService {
   private transactionModel: typeof TransactionModel = TransactionModel;
@@ -27,8 +28,12 @@ class PayoutService {
     }
 
     const amount = affiliate.payment.redeemable;
-    if (amount <= 100) {
-      throw new Error("Minimum payout amount is $100");
+    if (amount <= config.node_env !== "production" ? 1 : 100) {
+      throw new Error(
+        "Minimum payout amount is " +
+          (config.node_env !== "production" ? 1 : 100) +
+          " USD"
+      );
     }
     const paypalTransaction = await this.paypalService.initiatePayout(
       amount,
@@ -43,6 +48,21 @@ class PayoutService {
       payPalSenderBatchId: paypalTransaction.senderBatchId,
       status: paypalTransaction.batchStatus as PayoutStatus,
     }).save();
+
+    affiliate.payment.redeemable -= amount;
+
+    await affiliate.save();
+
+    await this.transactionModel.updateMany(
+      {
+        product: productId,
+        user: userId,
+        status: TransactionStatus.REDEEMABLE,
+      },
+      {
+        status: TransactionStatus.PROCESSING,
+      }
+    );
 
     return payoutRequest;
   }
@@ -138,12 +158,14 @@ class PayoutService {
     }
 
     if (status === PayoutStatus.SUCCESS) {
-      const affiliate = await this.affiliateModel.findByIdAndUpdate(
+      await this.affiliateModel.findByIdAndUpdate(
         payout.affiliate,
         {
           $inc: {
-            "payment.redeemable": -payout.amount,
             "payment.redeemed": payout.amount,
+          },
+          $set: {
+            "payment.lastRedeemed": payout.amount,
           },
         },
         {
@@ -151,9 +173,47 @@ class PayoutService {
         }
       );
 
-      if (!affiliate) {
-        throw new Error("Affiliate not found");
-      }
+      await this.transactionModel.updateMany(
+        {
+          product: payout.product,
+          user: payout.user,
+          status: TransactionStatus.PROCESSING,
+        },
+        {
+          status: TransactionStatus.REDEEMED,
+        }
+      );
+    } else if (
+      [
+        PayoutStatus.DENIED,
+        PayoutStatus.RETURNED,
+        PayoutStatus.FAILED,
+        PayoutStatus.REFUNDED,
+        PayoutStatus.REVERSED,
+      ].includes(status)
+    ) {
+      await this.affiliateModel.findByIdAndUpdate(
+        payout.affiliate,
+        {
+          $inc: {
+            "payment.redeemable": payout.amount,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+
+      await this.transactionModel.updateMany(
+        {
+          product: payout.product,
+          user: payout.user,
+          status: TransactionStatus.PROCESSING,
+        },
+        {
+          status: TransactionStatus.REDEEMABLE,
+        }
+      );
     }
 
     return payout;
