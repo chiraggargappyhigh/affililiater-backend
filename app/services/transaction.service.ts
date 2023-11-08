@@ -70,7 +70,7 @@ class TransactionService {
           paymentIntentId: transactionPayload.paymentIntentId,
           codeUsed: transactionPayload.code,
           sale: {
-            amount: transactionPayload.sale.amount,
+            amount: transactionPayload.sale.amount / 100,
             currency: transactionPayload.sale.currency,
           },
           commission: {
