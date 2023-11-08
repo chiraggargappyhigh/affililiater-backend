@@ -121,6 +121,7 @@ class PaypalService {
 
     return {
       batchId: data.batch_header.payout_batch_id,
+      senderBatchId: data.batch_header.sender_batch_header.sender_batch_id,
       batchStatus: data.batch_header.batch_status,
     };
   }

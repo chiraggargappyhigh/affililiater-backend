@@ -29,9 +29,18 @@ class PayoutService {
     if (amount <= 100) {
       throw new Error("Minimum payout amount is $100");
     }
+    const paypalTransaction = await this.paypalService.initiatePayout(
+      amount,
+      affiliate.payout.paypalEmail,
+      userId,
+      productId
+    );
     const payoutRequest = await new this.payoutModel({
       affiliate: affiliate._id,
       amount,
+      payPalBatchId: paypalTransaction.batchId,
+      payPalSenderBatchId: paypalTransaction.senderBatchId,
+      status: paypalTransaction.batchStatus as PayoutStatus,
     }).save();
 
     return payoutRequest;
@@ -42,11 +51,14 @@ class PayoutService {
       user: userId,
       product: productId,
     });
+    if (!affiliate) {
+      throw new Error("Affiliate not found");
+    }
 
     const transactions = await this.transactionModel.find({
       product: productId,
       user: userId,
-      status: TransactionStatus.CREATED,
+      status: TransactionStatus.COMMISSION_ALLOCATED,
       createdAt: {
         $lt: new Date(
           Date.now() - affiliate?.config.bufferDays! * 24 * 60 * 60 * 1000
@@ -54,8 +66,8 @@ class PayoutService {
       },
     });
 
-    if (!affiliate) {
-      throw new Error("Affiliate not found");
+    if (!transactions.length) {
+      return affiliate;
     }
 
     const redeemableBalance = transactions.reduce(
@@ -72,10 +84,10 @@ class PayoutService {
       })
       .select("payment");
 
-    this.transactionModel.updateMany(
+    const updateTransactions = await this.transactionModel.updateMany(
       {
         _id: {
-          $in: transactions.map((transaction) => transaction._id),
+          $in: transactions.map((transaction) => transaction._id.toString()),
         },
       },
       {

@@ -11,4 +11,6 @@ router.post(
   paypalController.connectPaypal
 );
 
+router.post("/webhook/payouts", paypalController.payoutWebhook);
+
 export default router;

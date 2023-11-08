@@ -6,6 +6,7 @@ class PaypalController {
 
   constructor() {
     this.connectPaypal = this.connectPaypal.bind(this);
+    this.payoutWebhook = this.payoutWebhook.bind(this);
   }
 
   public async connectPaypal(
@@ -28,6 +29,22 @@ class PaypalController {
         status: "success",
         message: "Paypal connected successfully",
         payout,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async payoutWebhook(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      console.log(req.body);
+      res.status(200).send({
+        status: "success",
+        message: "Webhook received",
       });
     } catch (error) {
       next(error);

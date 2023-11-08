@@ -30,6 +30,9 @@ const PayoutSchema = new mongoose.Schema<PayoutDocument>(
     payPalBatchId: {
       type: String,
     },
+    payPalSenderBatchId: {
+      type: String,
+    },
   },
   {
     timestamps: true,

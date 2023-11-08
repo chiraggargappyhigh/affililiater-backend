@@ -21,6 +21,7 @@ interface Payout {
   currency: string;
   status: PayoutStatus;
   payPalBatchId: string;
+  payPalSenderBatchId: string;
   createdAt: Date;
   updatedAt: Date;
 }
