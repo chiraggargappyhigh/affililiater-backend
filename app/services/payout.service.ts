@@ -13,6 +13,7 @@ class PayoutService {
     this.updateRedeemableBalance = this.updateRedeemableBalance.bind(this);
     this.createPayoutRequest = this.createPayoutRequest.bind(this);
     this.listByAffiliate = this.listByAffiliate.bind(this);
+    this.updatePayoutStatus = this.updatePayoutStatus.bind(this);
   }
 
   public async createPayoutRequest(productId: string, userId: string) {
@@ -115,6 +116,47 @@ class PayoutService {
       .limit(limit);
 
     return payouts;
+  }
+
+  public async updatePayoutStatus(payPalBatchId: string, status: PayoutStatus) {
+    const payout = await this.payoutModel.findOneAndUpdate(
+      {
+        payPalBatchId,
+      },
+      {
+        $set: {
+          status,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!payout) {
+      throw new Error("Payout not found");
+    }
+
+    if (status === PayoutStatus.SUCCESS) {
+      const affiliate = await this.affiliateModel.findByIdAndUpdate(
+        payout.affiliate,
+        {
+          $inc: {
+            "payment.redeemable": -payout.amount,
+            "payment.redeemed": payout.amount,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+
+      if (!affiliate) {
+        throw new Error("Affiliate not found");
+      }
+    }
+
+    return payout;
   }
 }
 
