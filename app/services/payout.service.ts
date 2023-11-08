@@ -28,7 +28,7 @@ class PayoutService {
     }
 
     const amount = affiliate.payment.redeemable;
-    if (amount <= config.node_env !== "production" ? 1 : 100) {
+    if (amount <= (config.node_env !== "production" ? 1 : 100)) {
       throw new Error(
         "Minimum payout amount is " +
           (config.node_env !== "production" ? 1 : 100) +
@@ -158,7 +158,7 @@ class PayoutService {
     }
 
     if (status === PayoutStatus.SUCCESS) {
-      await this.affiliateModel.findByIdAndUpdate(
+      const affiliate = await this.affiliateModel.findByIdAndUpdate(
         payout.affiliate,
         {
           $inc: {
@@ -175,8 +175,8 @@ class PayoutService {
 
       await this.transactionModel.updateMany(
         {
-          product: payout.product,
-          user: payout.user,
+          product: affiliate?.product,
+          user: affiliate?.user,
           status: TransactionStatus.PROCESSING,
         },
         {
@@ -192,7 +192,7 @@ class PayoutService {
         PayoutStatus.REVERSED,
       ].includes(status)
     ) {
-      await this.affiliateModel.findByIdAndUpdate(
+      const affiliate = await this.affiliateModel.findByIdAndUpdate(
         payout.affiliate,
         {
           $inc: {
@@ -206,8 +206,8 @@ class PayoutService {
 
       await this.transactionModel.updateMany(
         {
-          product: payout.product,
-          user: payout.user,
+          product: affiliate?.product,
+          user: affiliate?.user,
           status: TransactionStatus.PROCESSING,
         },
         {
