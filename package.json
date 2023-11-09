@@ -26,6 +26,7 @@
     "morgan": "^1.10.0",
     "nodemon": "^3.0.1",
     "qs": "^6.11.2",
+    "querystring": "^0.2.1",
     "referral-codes": "^2.0.3",
     "stripe": "^13.9.0",
     "uuid": "^9.0.1",

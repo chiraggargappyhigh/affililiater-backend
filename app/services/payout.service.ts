@@ -8,9 +8,11 @@ class PayoutService {
   private affiliateModel: typeof AffiliateModel = AffiliateModel;
   private payoutModel: typeof PayoutModel = PayoutModel;
 
-  private paypalService: typeof paypalService = paypalService;
+  private paypalService: typeof paypalService;
 
   constructor() {
+    this.paypalService = paypalService;
+
     this.updateRedeemableBalance = this.updateRedeemableBalance.bind(this);
     this.createPayoutRequest = this.createPayoutRequest.bind(this);
     this.listByAffiliate = this.listByAffiliate.bind(this);
@@ -35,7 +37,8 @@ class PayoutService {
           " USD"
       );
     }
-    const paypalTransaction = await this.paypalService.initiatePayout(
+
+    const paypalTransaction = await paypalService.initiatePayout(
       amount,
       affiliate.payout.paypalEmail,
       userId,
@@ -127,13 +130,17 @@ class PayoutService {
   ) {
     const limit = parseInt(l);
     const page = parseInt(p);
+    const affiliate = await this.affiliateModel.findOne({
+      user: userId,
+      product: productId,
+    });
     const payouts = await this.payoutModel
       .find({
-        user: userId,
-        product: productId,
+        affiliate: affiliate?._id,
       })
       .skip(limit * page - limit)
-      .limit(limit);
+      .limit(limit)
+      .select("-affiliate -__v -payPalBatchId -payPalSenderBatchId -_id");
 
     return payouts;
   }
@@ -165,7 +172,7 @@ class PayoutService {
             "payment.redeemed": payout.amount,
           },
           $set: {
-            "payment.lastRedeemed": payout.amount,
+            "payment.lastRedeemed": new Date(),
           },
         },
         {

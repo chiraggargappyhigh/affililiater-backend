@@ -12,8 +12,8 @@ router.get(
   payoutController.updateRedeemableBalance
 );
 
-router.post(
-  "/:productId",
+router.get(
+  "/initiate/:productId",
   authMiddleware.authenticate,
   payoutController.createPayoutRequest
 );

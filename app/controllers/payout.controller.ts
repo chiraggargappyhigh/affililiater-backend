@@ -6,6 +6,8 @@ class PayoutController {
   private payoutService: typeof payoutService = payoutService;
   constructor() {
     this.updateRedeemableBalance = this.updateRedeemableBalance.bind(this);
+    this.createPayoutRequest = this.createPayoutRequest.bind(this);
+    this.listPayoutRequests = this.listPayoutRequests.bind(this);
   }
 
   public async createPayoutRequest(
