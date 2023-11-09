@@ -6,20 +6,15 @@ import {
   TransactionStatus,
 } from "../../interfaces";
 import { TransactionModel } from "../models";
-import AffiliateService from "./affiliate.service";
-import UserService from "./user.service";
+import { affiliateService, userService } from ".";
 import { Convert } from "easy-currencies";
 
 class TransactionService {
-  private transactionModel: typeof TransactionModel;
-  private affiliateService: AffiliateService;
-  private userService: UserService;
+  private transactionModel: typeof TransactionModel = TransactionModel;
+  private affiliateService: typeof affiliateService = affiliateService;
+  private userService: typeof userService = userService;
 
   constructor() {
-    this.transactionModel = TransactionModel;
-    this.affiliateService = new AffiliateService();
-    this.userService = new UserService();
-
     this.create = this.create.bind(this);
     this.addAffiliateCommission = this.addAffiliateCommission.bind(this);
     this.refund = this.refund.bind(this);
@@ -29,6 +24,10 @@ class TransactionService {
   }
 
   public async create(transactionPayload: CreateTransactionPayload) {
+    console.log(transactionPayload);
+    if (!transactionPayload.subscriptionId || !transactionPayload.refId) {
+      throw new Error("Invalid Payload");
+    }
     const newTransaction = new this.transactionModel({
       subscriptionId: transactionPayload.subscriptionId,
       linkId: transactionPayload.refId,
@@ -75,7 +74,7 @@ class TransactionService {
           paymentIntentId: transactionPayload.paymentIntentId,
           codeUsed: transactionPayload.code,
           sale: {
-            amount: transactionPayload.sale.amount,
+            amount: transactionPayload.sale.amount / 100,
             currency: transactionPayload.sale.currency,
           },
           commission: {

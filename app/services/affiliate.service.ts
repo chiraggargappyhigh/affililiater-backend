@@ -8,18 +8,15 @@ import {
   UserDocument,
 } from "../../interfaces";
 import { config } from "../../config";
-import ProductService from "./product.service";
+import { productService } from ".";
 import Stripe from "stripe";
 import { AES } from "crypto-js";
 import { QueryOptions } from "mongoose";
 
 class AffiliateService {
-  private affiliateModel: typeof AffiliateModel;
-  private productService: ProductService;
-
+  private affiliateModel: typeof AffiliateModel = AffiliateModel;
+  private productService: typeof productService = productService;
   constructor() {
-    this.affiliateModel = AffiliateModel;
-    this.productService = new ProductService();
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
     this.getAffiliateByCodeOrLink = this.getAffiliateByCodeOrLink.bind(this);

@@ -1,12 +1,10 @@
 import { Router } from "express";
 import { AffiliateController } from "../controllers";
-import { AuthMiddleware, AffiliateMiddleware } from "../middlewares";
+import { authMiddleware, affiliateMiddleware } from "../middlewares";
 
 const router = Router();
 
 const affiliateController = new AffiliateController();
-const authMiddleware = new AuthMiddleware();
-const affiliateMiddleware = new AffiliateMiddleware();
 
 router.post("/", authMiddleware.authenticate, affiliateController.create);
 router.get(

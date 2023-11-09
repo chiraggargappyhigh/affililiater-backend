@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import { PaypalService } from "../services";
+import { paypalService, payoutService } from "../services";
 
 class PaypalController {
-  private paypalService: PaypalService;
+  private paypalService: typeof paypalService = paypalService;
+  private payoutService: typeof payoutService = payoutService;
 
   constructor() {
-    this.paypalService = new PaypalService();
-
     this.connectPaypal = this.connectPaypal.bind(this);
+    this.payoutWebhook = this.payoutWebhook.bind(this);
   }
 
   public async connectPaypal(
@@ -30,6 +30,33 @@ class PaypalController {
         status: "success",
         message: "Paypal connected successfully",
         payout,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async payoutWebhook(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { event_type, resource, resource_type } = req.body;
+      if (resource_type === "payouts") {
+        const batchId = resource.batch_header.payout_batch_id;
+        const status = resource.batch_header.batch_status;
+        await this.payoutService.updatePayoutStatus(batchId, status);
+      } else if (resource_type === "payouts_item") {
+        const batchId = resource.payout_batch_id;
+        const status = resource.transaction_status;
+        await this.payoutService.updatePayoutStatus(batchId, status);
+      } else {
+        throw new Error("Invalid resource type");
+      }
+      res.status(200).send({
+        status: "success",
+        message: "Webhook received",
       });
     } catch (error) {
       next(error);

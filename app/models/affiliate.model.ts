@@ -40,7 +40,7 @@ const affiliateSchema = new mongoose.Schema<AffiliateDocument>(
     payment: {
       redeemable: { type: Number, default: 0 },
       totalRedeemed: { type: Number, default: 0 },
-      lastRedeemed: { type: Number, default: 0 },
+      lastRedeemed: { type: Date },
       inBuffer: { type: Number, default: 0 },
     },
   },

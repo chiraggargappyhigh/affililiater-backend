@@ -4,7 +4,7 @@ import AssetModel from "./asset.model";
 import ProductModel from "./product.model";
 import TransactionModel from "./transaction.model";
 import RedirectModel from "./redirect.model";
-
+import PayoutModel from "./payout.model";
 export {
   AffiliateModel,
   UserModel,
@@ -12,4 +12,5 @@ export {
   ProductModel,
   TransactionModel,
   RedirectModel,
+  PayoutModel,
 };

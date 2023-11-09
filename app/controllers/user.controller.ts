@@ -1,13 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { UserService } from "../services";
+import { userService } from "../services";
 import { UserType, UserDocument, UserLoginMethod } from "../../interfaces";
 
 class UserController {
-  private userService: UserService;
+  private userService: typeof userService = userService;
 
   constructor() {
-    this.userService = new UserService();
-
     this.login = this.login.bind(this);
     this.update = this.update.bind(this);
     this.read = this.read.bind(this);

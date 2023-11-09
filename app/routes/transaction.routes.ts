@@ -1,11 +1,10 @@
 import { Router } from "express";
 import { TransactionController } from "../controllers";
-import { AuthMiddleware } from "../middlewares";
+import { authMiddleware } from "../middlewares";
 
 const router = Router();
 
 const transactionController = new TransactionController();
-const authMiddleware = new AuthMiddleware();
 
 router.post(
   "/",

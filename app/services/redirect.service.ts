@@ -1,17 +1,14 @@
 import { Request } from "express";
 import { Redirect, RedirectDocument, RedirectPayload } from "../../interfaces";
 import { RedirectModel } from "../models";
-import AffiliateService from "./affiliate.service";
+import { affiliateService } from ".";
 import { config } from "../../config";
 
 class RedirectService {
-  private RedirectModel: typeof RedirectModel;
-  private affiliateService: AffiliateService;
+  private RedirectModel: typeof RedirectModel = RedirectModel;
+  private affiliateService: typeof affiliateService = affiliateService;
 
   constructor() {
-    this.RedirectModel = RedirectModel;
-    this.affiliateService = new AffiliateService();
-
     this.create = this.create.bind(this);
     this.handleRedirect = this.handleRedirect.bind(this);
   }

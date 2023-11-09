@@ -37,7 +37,7 @@ const transactionSchema = new mongoose.Schema<Transaction>(
     status: {
       type: Number,
       enum: TransactionStatusValues,
-      default: TransactionStatus.Created,
+      default: TransactionStatus.CREATED,
     },
   },
   { timestamps: true }

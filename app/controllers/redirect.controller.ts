@@ -1,12 +1,10 @@
-import { RedirectService } from "../services";
+import { redirectService } from "../services";
 import { Request, Response, NextFunction } from "express";
 import { Redirect } from "../../interfaces";
 
 class RedirectController {
-  private redirectService: RedirectService;
+  private redirectService: typeof redirectService = redirectService;
   constructor() {
-    this.redirectService = new RedirectService();
-
     this.handleRedirect = this.handleRedirect.bind(this);
   }
 
