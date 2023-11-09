@@ -21,6 +21,7 @@ class TransactionController {
 
   public async create(req: Request, res: Response, next: NextFunction) {
     const { data } = req.body as { data: CreateTransactionPayload };
+    console.log(data);
     try {
       const transaction = await this.transactionService.create(data);
       res.status(201).json({

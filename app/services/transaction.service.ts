@@ -24,6 +24,10 @@ class TransactionService {
   }
 
   public async create(transactionPayload: CreateTransactionPayload) {
+    console.log(transactionPayload);
+    if (!transactionPayload.subscriptionId || !transactionPayload.refId) {
+      throw new Error("Invalid Payload");
+    }
     const newTransaction = new this.transactionModel({
       subscriptionId: transactionPayload.subscriptionId,
       linkId: transactionPayload.refId,
